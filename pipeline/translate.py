@@ -57,7 +57,7 @@ def save_cache(cache):
         json.dump(cache, f, ensure_ascii=False, indent=2)
 
 
-def translate_batch(items, client, dry_run):
+def translate_batch(items, client, dry_run, max_tokens=4096):
     if dry_run:
         return {i["url_hash"]: {
             "ru": {"title": f"[RU] {i['title']}", "summary": f"[RU] {i.get('summary','')}"},
