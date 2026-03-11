@@ -61,6 +61,10 @@ def assign_levels(articles, mode):
     l1_ids = set()
 
     for i, a in enumerate(articles):
+        title_lower = a.get("title", "").lower()
+        if any(x in title_lower for x in ["author correction", "erratum", "corrigendum", "retraction"]):
+            a["level"] = 3
+            continue
         cat = a.get("category", "general")
         src = a.get("source_id", "")
         if cat_count_l1[cat] < level1_per_cat and source_count_l1[src] < MAX_PER_SOURCE_L1:
