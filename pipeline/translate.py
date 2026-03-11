@@ -18,6 +18,9 @@ log = setup_logging("translate")
 
 CACHE_PATH = DATA_DIR / "translation_cache.json"
 BATCH_SIZE = 20
+BATCH_SIZE_FULL = 5        # меньше батч для статей с summary
+MAX_TOKENS_FULL = 8192     # максимум для haiku
+MAX_TOKENS_TITLE = 4096
 MAX_RETRIES = 3
 RETRY_DELAY = 5
 
@@ -70,7 +73,7 @@ def translate_batch(items, client, dry_run):
         try:
             response = client.messages.create(
                 model="claude-haiku-4-5-20251001",
-                max_tokens=4096,
+                max_tokens=max_tokens,
                 system=SYSTEM_PROMPT,
                 messages=[{"role": "user", "content": user_content}]
             )
@@ -114,13 +117,16 @@ def translate_articles(articles, dry_run=False):
     log.info(f"From cache: {cached}, full: {len(to_translate_full)}, title-only: {len(to_translate_title)}")
 
     def process(batch_articles, include_summary):
-        for i in range(0, len(batch_articles), BATCH_SIZE):
-            batch = batch_articles[i:i + BATCH_SIZE]
+        bsize = BATCH_SIZE_FULL if include_summary else BATCH_SIZE
+        mtokens = MAX_TOKENS_FULL if include_summary else MAX_TOKENS_TITLE
+        for i in range(0, len(batch_articles), bsize):
+            batch = batch_articles[i:i + bsize]
+
             items = [{"url_hash": url_id(a["url"]), "title": a["title"],
                       **({"summary": a.get("summary", "")} if include_summary else {})}
                      for a in batch]
             log.info(f"Translating batch {i//BATCH_SIZE+1} ({'full' if include_summary else 'title-only'}), {len(items)} items")
-            result = translate_batch(items, client, dry_run)
+            result = translate_batch(items, client, dry_run, max_tokens=mtokens)
             for a in batch:
                 h = url_id(a["url"])
                 if h in result:
