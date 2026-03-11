@@ -1,0 +1,61 @@
+name: Daily Digest
+
+on:
+  schedule:
+    - cron: '0 6 * * 1-5'   # Monday–Friday at 06:00 UTC
+  workflow_dispatch:          # Manual trigger for testing
+
+env:
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install feedparser anthropic
+
+      - name: Set TODAY variable
+        run: echo "TODAY=$(date -u +%Y-%m-%d)" >> $GITHUB_ENV
+
+      - name: Fetch RSS articles
+        run: python pipeline/fetch_rss.py --mode daily --date $TODAY
+
+      - name: Score articles
+        run: python pipeline/score.py --mode daily --date $TODAY
+
+      - name: Translate articles
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python pipeline/translate.py --mode daily --date $TODAY
+
+      - name: Render RU (+ archive)
+        run: python pipeline/render.py --mode daily --date $TODAY --lang ru
+
+      - name: Render EN (+ archive)
+        run: python pipeline/render.py --mode daily --date $TODAY --lang en
+
+      - name: Render HE (+ archive)
+        run: python pipeline/render.py --mode daily --date $TODAY --lang he
+
+      - name: Commit and push
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/ data/
+          git diff --staged --quiet || git commit -m "Daily digest $TODAY"
+          git push
