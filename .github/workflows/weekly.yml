@@ -51,7 +51,7 @@ jobs:
       - name: Translate articles
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: python pipeline/translate.py --mode weekly --week $WEEK
+        run: python pipeline/translate.py --mode weekly --week $WEEK --langs ru,en
 
       - name: Render RU
         run: python pipeline/render.py --mode weekly --week $WEEK --lang ru
@@ -59,8 +59,8 @@ jobs:
       - name: Render EN
         run: python pipeline/render.py --mode weekly --week $WEEK --lang en
 
-      - name: Render HE
-        run: python pipeline/render.py --mode weekly --week $WEEK --lang he
+#      - name: Render HE
+#        run: python pipeline/render.py --mode weekly --week $WEEK --lang he
 
       - name: Copy to archive
         run: |
