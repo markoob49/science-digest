@@ -109,6 +109,14 @@ def translate_batch(items, client, dry_run, max_tokens=4096, langs=("ru", "he"))
         except json.JSONDecodeError as e:
             log.warning(f"JSON error attempt {attempt}: {e}")
             if attempt == MAX_RETRIES:
+                # Fallback: translate one by one to salvage partial results
+                if len(items) > 1:
+                    log.info(f"Retrying {len(items)} items one by one...")
+                    result = {}
+                    for item in items:
+                        r = translate_batch([item], client, dry_run, max_tokens, langs)
+                        result.update(r)
+                    return result
                 return {}
         except anthropic.APIError as e:
             log.warning(f"API error attempt {attempt}: {e}")
@@ -144,7 +152,7 @@ def translate_articles(articles, dry_run=False, langs=("ru", "he")):
         for i in range(0, len(batch_articles), bsize):
             batch = batch_articles[i:i + bsize]
             items = [{"url_hash": url_id(a["url"]), "title": a["title"],
-                      **({"summary": a.get("summary", "")} if include_summary else {})}
+                      **({**{"summary": a.get("summary", "")}} if include_summary else {})}
                      for a in batch]
             log.info(f"Translating batch {i//bsize+1} ({'full' if include_summary else 'title-only'}), {len(items)} items")
             result = translate_batch(items, client, dry_run, max_tokens=mtokens, langs=langs)
