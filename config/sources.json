@@ -1,37 +1,364 @@
 {
   "sources": [
-    { "id": "nature",           "name": "Nature",                "type": "academic",     "lang": "en", "base_score": 100, "rss_url": "https://www.nature.com/nature.rss",                                         "category_default": "biology",   "has_rss": true },
-    { "id": "science_aaas",     "name": "Science",               "type": "academic",     "lang": "en", "base_score": 100, "rss_url": "https://www.science.org/rss/news_current.xml",                              "category_default": "general",   "has_rss": true },
-    { "id": "cell",             "name": "Cell",                  "type": "academic",     "lang": "en", "base_score": 95,  "rss_url": "https://www.cell.com/cell/inpress.rss",                                     "category_default": "biology",   "has_rss": true },
-    { "id": "nejm",             "name": "NEJM",                  "type": "academic",     "lang": "en", "base_score": 95,  "rss_url": "https://www.nejm.org/action/showFeed?type=etoc&feed=rss&jc=nejm",           "category_default": "medicine",  "has_rss": true },
-    { "id": "lancet",           "name": "The Lancet",            "type": "academic",     "lang": "en", "base_score": 95,  "rss_url": "https://www.thelancet.com/rssfeed/lancet_current.xml",                      "category_default": "medicine",  "has_rss": true },
-    { "id": "pnas",             "name": "PNAS",                  "type": "academic",     "lang": "en", "base_score": 85,  "rss_url": "https://www.pnas.org/rss/current.xml",                                      "category_default": "general",   "has_rss": true },
-    { "id": "nature_medicine",  "name": "Nature Medicine",       "type": "academic",     "lang": "en", "base_score": 90,  "rss_url": "https://www.nature.com/nm.rss",                                             "category_default": "medicine",  "has_rss": true },
-    { "id": "nature_biotech",   "name": "Nature Biotechnology",  "type": "academic",     "lang": "en", "base_score": 88,  "rss_url": "https://www.nature.com/nbt.rss",                                            "category_default": "biology",   "has_rss": true },
-    { "id": "nature_astronomy", "name": "Nature Astronomy",      "type": "academic",     "lang": "en", "base_score": 85,  "rss_url": "https://www.nature.com/natastron.rss",                                      "category_default": "astronomy", "has_rss": true },
-    { "id": "science_advances", "name": "Science Advances",      "type": "academic",     "lang": "en", "base_score": 70,  "rss_url": "https://www.science.org/action/showFeed?type=etoc&feed=rss&jc=sciadv",      "category_default": "general",   "has_rss": true },
-    { "id": "nature_comms",     "name": "Nature Communications", "type": "academic",     "lang": "en", "base_score": 70,  "rss_url": "https://www.nature.com/ncomms.rss",                                         "category_default": "general",   "has_rss": true },
-    { "id": "arxiv_cs_ai",      "name": "arXiv cs.AI",           "type": "preprint",     "lang": "en", "base_score": 50,  "rss_url": "https://export.arxiv.org/rss/cs.AI",                                        "category_default": "ai_it",     "has_rss": true },
-    { "id": "arxiv_quant_ph",   "name": "arXiv quant-ph",        "type": "preprint",     "lang": "en", "base_score": 50,  "rss_url": "https://export.arxiv.org/rss/quant-ph",                                     "category_default": "physics",   "has_rss": true },
-    { "id": "arxiv_astro_ph",   "name": "arXiv astro-ph",        "type": "preprint",     "lang": "en", "base_score": 50,  "rss_url": "https://export.arxiv.org/rss/astro-ph",                                     "category_default": "astronomy", "has_rss": true },
-    { "id": "biorxiv",          "name": "bioRxiv",               "type": "preprint",     "lang": "en", "base_score": 45,  "rss_url": "https://connect.biorxiv.org/biorxiv_xml.php?subject=all",                   "category_default": "biology",   "has_rss": true },
-    { "id": "medrxiv",          "name": "medRxiv",               "type": "preprint",     "lang": "en", "base_score": 45,  "rss_url": "https://connect.medrxiv.org/medrxiv_xml.php?subject=all",                   "category_default": "medicine",  "has_rss": true },
-    { "id": "sciencedaily",     "name": "ScienceDaily",          "type": "news",         "lang": "en", "base_score": 32,  "rss_url": "https://www.sciencedaily.com/rss/all.xml",                                  "category_default": "general",   "has_rss": true },
-    { "id": "phys_org",         "name": "Phys.org",              "type": "news",         "lang": "en", "base_score": 35,  "rss_url": "https://phys.org/rss-feed/",                                                "category_default": "general",   "has_rss": true },
-    { "id": "quanta",           "name": "Quanta Magazine",       "type": "news",         "lang": "en", "base_score": 48,  "rss_url": "https://api.quantamagazine.org/feed/",                                      "category_default": "general",   "has_rss": true },
-    { "id": "scientificamerican","name": "Scientific American",  "type": "news",         "lang": "en", "base_score": 42,  "rss_url": "https://www.scientificamerican.com/feeds/rss/",                             "category_default": "general",   "has_rss": true },
-    { "id": "newscientist",     "name": "New Scientist",         "type": "news",         "lang": "en", "base_score": 40,  "rss_url": "https://www.newscientist.com/feed/home/",                                   "category_default": "general",   "has_rss": true },
-    { "id": "sciencenews",      "name": "Science News",          "type": "news",         "lang": "en", "base_score": 38,  "rss_url": "https://www.sciencenews.org/feed",                                          "category_default": "general",   "has_rss": true },
-    { "id": "nasa_news",        "name": "NASA News",             "type": "news",         "lang": "en", "base_score": 40,  "rss_url": "https://www.nasa.gov/news-release/feed/",                                   "category_default": "astronomy", "has_rss": true },
-    { "id": "mit_news",         "name": "MIT News",              "type": "news",         "lang": "en", "base_score": 40,  "rss_url": "https://news.mit.edu/rss/research",                                         "category_default": "general",   "has_rss": true },
-    { "id": "bbc_science",      "name": "BBC Science",           "type": "news",         "lang": "en", "base_score": 38,  "rss_url": "http://feeds.bbci.co.uk/news/science_and_environment/rss.xml",              "category_default": "general",   "has_rss": true },
-    { "id": "guardian_science", "name": "The Guardian Science",  "type": "news",         "lang": "en", "base_score": 36,  "rss_url": "https://www.theguardian.com/science/rss",                                   "category_default": "general",   "has_rss": true },
-    { "id": "ars_technica",     "name": "Ars Technica Science",  "type": "news",         "lang": "en", "base_score": 36,  "rss_url": "https://feeds.arstechnica.com/arstechnica/science",                         "category_default": "ai_it",     "has_rss": true },
-    { "id": "eurekalert",       "name": "EurekAlert",            "type": "news",         "lang": "en", "base_score": 30,  "rss_url": "https://www.eurekalert.org/rss.xml",                                        "category_default": "general",   "has_rss": true },
-    { "id": "popsci",           "name": "Popular Science",       "type": "news",         "lang": "en", "base_score": 30,  "rss_url": "https://www.popsci.com/feed/",                                              "category_default": "general",   "has_rss": true },
-    { "id": "who_news",         "name": "WHO News",              "type": "institutional","lang": "en", "base_score": 38,  "rss_url": "https://www.who.int/rss-feeds/news-english.xml",                            "category_default": "medicine",  "has_rss": true },
-    { "id": "nplus1",           "name": "N+1",                   "type": "news",         "lang": "ru", "base_score": 28,  "rss_url": "https://nplus1.ru/rss",                                                     "category_default": "general",   "has_rss": true },
-    { "id": "naked_science",    "name": "Naked Science",         "type": "news",         "lang": "ru", "base_score": 24,  "rss_url": "https://naked-science.ru/feed",                                             "category_default": "general",   "has_rss": true },
-    { "id": "elementy",         "name": "Элементы",              "type": "news",         "lang": "ru", "base_score": 30,  "rss_url": "https://elementy.ru/rss/news",                                              "category_default": "general",   "has_rss": true }
+    {
+      "id": "nature",
+      "name": "Nature",
+      "type": "academic",
+      "lang": "en",
+      "base_score": 100,
+      "rss_url": "https://www.nature.com/nature.rss",
+      "category_default": "biology",
+      "has_rss": true
+    },
+    {
+      "id": "science_aaas",
+      "name": "Science (AAAS)",
+      "type": "academic",
+      "lang": "en",
+      "base_score": 100,
+      "rss_url": "https://www.science.org/rss/news_current.xml",
+      "category_default": "general",
+      "has_rss": true
+    },
+    {
+      "id": "cell",
+      "name": "Cell",
+      "type": "academic",
+      "lang": "en",
+      "base_score": 95,
+      "rss_url": "https://www.cell.com/cell/rss",
+      "category_default": "biology",
+      "has_rss": true
+    },
+    {
+      "id": "nejm",
+      "name": "NEJM",
+      "type": "academic",
+      "lang": "en",
+      "base_score": 95,
+      "rss_url": "https://www.nejm.org/action/showFeed?type=etoc&feed=rss&jc=nejm",
+      "category_default": "medicine",
+      "has_rss": true
+    },
+    {
+      "id": "lancet",
+      "name": "The Lancet",
+      "type": "academic",
+      "lang": "en",
+      "base_score": 95,
+      "rss_url": "https://www.thelancet.com/rssfeed/lancet_current.xml",
+      "category_default": "medicine",
+      "has_rss": true
+    },
+    {
+      "id": "pnas",
+      "name": "PNAS",
+      "type": "academic",
+      "lang": "en",
+      "base_score": 85,
+      "rss_url": "https://www.pnas.org/rss/current.xml",
+      "category_default": "general",
+      "has_rss": true
+    },
+    {
+      "id": "nature_medicine",
+      "name": "Nature Medicine",
+      "type": "academic",
+      "lang": "en",
+      "base_score": 90,
+      "rss_url": "https://www.nature.com/nm.rss",
+      "category_default": "medicine",
+      "has_rss": true
+    },
+    {
+      "id": "nature_biotech",
+      "name": "Nature Biotechnology",
+      "type": "academic",
+      "lang": "en",
+      "base_score": 88,
+      "rss_url": "https://www.nature.com/nbt.rss",
+      "category_default": "biology",
+      "has_rss": true
+    },
+    {
+      "id": "nature_astronomy",
+      "name": "Nature Astronomy",
+      "type": "academic",
+      "lang": "en",
+      "base_score": 85,
+      "rss_url": "https://www.nature.com/natastron.rss",
+      "category_default": "astronomy",
+      "has_rss": true
+    },
+    {
+      "id": "prl",
+      "name": "Physical Review Letters",
+      "type": "academic",
+      "lang": "en",
+      "base_score": 85,
+      "rss_url": "https://journals.aps.org/prl/rss/recent",
+      "category_default": "physics",
+      "has_rss": true
+    },
+    {
+      "id": "jama",
+      "name": "JAMA",
+      "type": "academic",
+      "lang": "en",
+      "base_score": 85,
+      "rss_url": "https://jamanetwork.com/rss/site_3/67.xml",
+      "category_default": "medicine",
+      "has_rss": true
+    },
+    {
+      "id": "science_advances",
+      "name": "Science Advances",
+      "type": "academic",
+      "lang": "en",
+      "base_score": 70,
+      "rss_url": "https://www.science.org/action/showFeed?type=etoc&feed=rss&jc=sciadv",
+      "category_default": "general",
+      "has_rss": true
+    },
+    {
+      "id": "nature_comms",
+      "name": "Nature Communications",
+      "type": "academic",
+      "lang": "en",
+      "base_score": 70,
+      "rss_url": "https://www.nature.com/ncomms.rss",
+      "category_default": "general",
+      "has_rss": true
+    },
+    {
+      "id": "arxiv_cs_ai",
+      "name": "arXiv cs.AI",
+      "type": "preprint",
+      "lang": "en",
+      "base_score": 50,
+      "rss_url": "https://export.arxiv.org/rss/cs.AI",
+      "category_default": "ai_it",
+      "has_rss": true
+    },
+    {
+      "id": "arxiv_quant_ph",
+      "name": "arXiv quant-ph",
+      "type": "preprint",
+      "lang": "en",
+      "base_score": 50,
+      "rss_url": "https://export.arxiv.org/rss/quant-ph",
+      "category_default": "physics",
+      "has_rss": true
+    },
+    {
+      "id": "arxiv_astro_ph",
+      "name": "arXiv astro-ph",
+      "type": "preprint",
+      "lang": "en",
+      "base_score": 50,
+      "rss_url": "https://export.arxiv.org/rss/astro-ph",
+      "category_default": "astronomy",
+      "has_rss": true
+    },
+    {
+      "id": "biorxiv",
+      "name": "bioRxiv",
+      "type": "preprint",
+      "lang": "en",
+      "base_score": 45,
+      "rss_url": "https://connect.biorxiv.org/biorxiv_xml.php?subject=all",
+      "category_default": "biology",
+      "has_rss": true
+    },
+    {
+      "id": "medrxiv",
+      "name": "medRxiv",
+      "type": "preprint",
+      "lang": "en",
+      "base_score": 45,
+      "rss_url": "https://connect.medrxiv.org/medrxiv_xml.php?subject=all",
+      "category_default": "medicine",
+      "has_rss": true
+    },
+    {
+      "id": "quanta",
+      "name": "Quanta Magazine",
+      "type": "news",
+      "lang": "en",
+      "base_score": 48,
+      "rss_url": "https://www.quantamagazine.org/feed",
+      "category_default": "general",
+      "has_rss": true
+    },
+    {
+      "id": "scientificamerican",
+      "name": "Scientific American",
+      "type": "news",
+      "lang": "en",
+      "base_score": 42,
+      "rss_url": "https://www.scientificamerican.com/feeds/rss/",
+      "category_default": "general",
+      "has_rss": true
+    },
+    {
+      "id": "newscientist",
+      "name": "New Scientist",
+      "type": "news",
+      "lang": "en",
+      "base_score": 40,
+      "rss_url": "https://www.newscientist.com/feed/home/",
+      "category_default": "general",
+      "has_rss": true
+    },
+    {
+      "id": "sciencenews",
+      "name": "Science News",
+      "type": "news",
+      "lang": "en",
+      "base_score": 38,
+      "rss_url": "https://www.sciencenews.org/feed",
+      "category_default": "general",
+      "has_rss": true
+    },
+    {
+      "id": "nasa_news",
+      "name": "NASA News",
+      "type": "news",
+      "lang": "en",
+      "base_score": 40,
+      "rss_url": "https://www.nasa.gov/news-release/feed/",
+      "category_default": "astronomy",
+      "has_rss": true
+    },
+    {
+      "id": "mit_news",
+      "name": "MIT News",
+      "type": "news",
+      "lang": "en",
+      "base_score": 40,
+      "rss_url": "https://news.mit.edu/rss/feed",
+      "category_default": "ai_it",
+      "has_rss": true
+    },
+    {
+      "id": "bbc_science",
+      "name": "BBC Science",
+      "type": "news",
+      "lang": "en",
+      "base_score": 38,
+      "rss_url": "https://feeds.bbci.co.uk/news/science_and_environment/rss.xml",
+      "category_default": "general",
+      "has_rss": true
+    },
+    {
+      "id": "guardian_science",
+      "name": "The Guardian Science",
+      "type": "news",
+      "lang": "en",
+      "base_score": 36,
+      "rss_url": "https://www.theguardian.com/science/rss",
+      "category_default": "general",
+      "has_rss": true
+    },
+    {
+      "id": "ars_technica",
+      "name": "Ars Technica Science",
+      "type": "news",
+      "lang": "en",
+      "base_score": 36,
+      "rss_url": "https://feeds.arstechnica.com/arstechnica/science",
+      "category_default": "ai_it",
+      "has_rss": true
+    },
+    {
+      "id": "sciencedaily",
+      "name": "ScienceDaily",
+      "type": "news",
+      "lang": "en",
+      "base_score": 32,
+      "rss_url": "https://www.sciencedaily.com/rss/all.xml",
+      "category_default": "general",
+      "has_rss": true
+    },
+    {
+      "id": "popsci",
+      "name": "Popular Science",
+      "type": "news",
+      "lang": "en",
+      "base_score": 30,
+      "rss_url": "https://www.popsci.com/feed/",
+      "category_default": "general",
+      "has_rss": true
+    },
+    {
+      "id": "eurekalert",
+      "name": "EurekAlert",
+      "type": "news",
+      "lang": "en",
+      "base_score": 30,
+      "rss_url": "https://www.eurekalert.org/rss.xml",
+      "category_default": "general",
+      "has_rss": true
+    },
+    {
+      "id": "who_news",
+      "name": "WHO News",
+      "type": "institutional",
+      "lang": "en",
+      "base_score": 38,
+      "rss_url": "https://www.who.int/feeds/entity/mediacentre/news/en/rss.xml",
+      "category_default": "medicine",
+      "has_rss": true
+    },
+    {
+      "id": "nplus1",
+      "name": "N+1",
+      "type": "news",
+      "lang": "ru",
+      "base_score": 28,
+      "rss_url": "https://nplus1.ru/rss",
+      "category_default": "general",
+      "has_rss": true
+    },
+    {
+      "id": "naked_science",
+      "name": "Naked Science",
+      "type": "news",
+      "lang": "ru",
+      "base_score": 24,
+      "rss_url": "https://naked-science.ru/feed",
+      "category_default": "general",
+      "has_rss": true
+    },
+    {
+      "id": "elementy",
+      "name": "Элементы",
+      "type": "news",
+      "lang": "ru",
+      "base_score": 30,
+      "rss_url": "https://elementy.ru/rss/news",
+      "category_default": "general",
+      "has_rss": true
+    },
+    {
+      "id": "spektrum",
+      "name": "Spektrum.de",
+      "type": "news",
+      "lang": "de",
+      "base_score": 38,
+      "rss_url": "https://www.spektrum.de/alias/rss/spektrum-de-rss-feed/996406",
+      "category_default": "general",
+      "has_rss": true
+    },
+    {
+      "id": "pesquisa_fapesp",
+      "name": "Pesquisa FAPESP",
+      "type": "news",
+      "lang": "pt",
+      "base_score": 35,
+      "rss_url": "https://revistapesquisa.fapesp.br/feed/",
+      "category_default": "general",
+      "has_rss": true
+    }
   ]
 }
