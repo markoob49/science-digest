@@ -46,6 +46,7 @@ def build_system_prompt(langs):
 
     return f"""You are a professional scientific translator.
 Translate the given scientific news items into {target_langs}.
+Source articles are primarily in English, but some may be in German (DE) or Portuguese (PT) — translate from whatever language the content is in.
 
 RULES:
 {lang_block}
