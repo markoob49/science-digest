@@ -31,7 +31,8 @@ def parse_entry_date(entry):
 
 def in_window(dt, window_start, window_end):
     if dt is None:
-        return False
+        # No date in feed → treat as current (within window)
+        return True
     if dt.tzinfo is None:
         dt = dt.replace(tzinfo=timezone.utc)
     return window_start <= dt <= window_end
@@ -63,6 +64,23 @@ def fetch_source(source, window_start, window_end, categories, cat_overrides):
     log.info(f"  Fetching {source['name']} ...")
     try:
         feed = feedparser.parse(rss_url, request_headers={"User-Agent": "SciDigest/3.0"})
+        # Some Russian sources (elementy.ru) use windows-1251; re-parse raw bytes if empty
+        if not feed.entries:
+            import urllib.request
+            req = urllib.request.Request(rss_url, headers={"User-Agent": "SciDigest/3.0"})
+            try:
+                with urllib.request.urlopen(req, timeout=15) as r:
+                    raw = r.read()
+                for enc in ("utf-8", "windows-1251", "iso-8859-1"):
+                    try:
+                        candidate = feedparser.parse(raw.decode(enc))
+                        if candidate.entries:
+                            feed = candidate
+                            break
+                    except Exception:
+                        continue
+            except Exception:
+                pass
     except Exception as e:
         log.warning(f"    ERROR {source_id}: {e}")
         return []
@@ -106,6 +124,9 @@ def fetch_source(source, window_start, window_end, categories, cat_overrides):
 
         summary = truncate(clean_html(raw_summary), max_chars=500)
 
+        # Use current date as fallback when feed entry has no date
+        effective_date = pub_date or datetime.now(timezone.utc)
+
         article = {
             "url": url,
             "title": title,
@@ -113,8 +134,8 @@ def fetch_source(source, window_start, window_end, categories, cat_overrides):
             "source_id": source_id,
             "source_name": source["name"],
             "source_lang": source.get("lang", "en"),
-            "date": pub_date.strftime("%Y-%m-%d") if pub_date else "",
-            "datetime": pub_date.isoformat() if pub_date else "",
+            "date": effective_date.strftime("%Y-%m-%d"),
+            "datetime": effective_date.isoformat(),
             "category_default": source.get("category_default", "general"),
             "score": 0,
             "level": None,
