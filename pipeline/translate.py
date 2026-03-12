@@ -24,23 +24,39 @@ MAX_TOKENS_TITLE = 4096
 MAX_RETRIES = 3
 RETRY_DELAY = 5
 
-SYSTEM_PROMPT = """You are a professional scientific translator.
-Translate the given scientific news items into Russian (ru) and Hebrew (he).
+
+def build_system_prompt(langs):
+    lang_rules = []
+    output_langs = []
+
+    if "ru" in langs:
+        lang_rules.append("- Russian (ru): accurate scientific translation, not paraphrase.")
+        output_langs.append('    "ru": {"title": "...", "summary": "..."}')
+    if "he" in langs:
+        lang_rules.append(
+            "- Hebrew (he): Modern Israeli Hebrew scientific journalism register.\n"
+            "  * Keep source/journal names in original Latin script.\n"
+            "  * Use Western Arabic numerals (0-9), not Hebrew numerals."
+        )
+        output_langs.append('    "he": {"title": "...", "summary": "..."}')
+
+    lang_block = "\n".join(lang_rules)
+    output_block = ",\n".join(output_langs)
+    target_langs = " and ".join(f"{l} ({l})" for l in langs if l in ("ru", "he"))
+
+    return f"""You are a professional scientific translator.
+Translate the given scientific news items into {target_langs}.
 
 RULES:
-- Russian: accurate scientific translation, not paraphrase.
-- Hebrew: Modern Israeli Hebrew scientific journalism register.
-  * Keep source/journal names in original Latin script.
-  * Use Western Arabic numerals (0-9), not Hebrew numerals.
+{lang_block}
 - Respond ONLY with valid JSON, no preamble or markdown.
 
 Output format:
-{
-  "url_hash": {
-    "ru": {"title": "...", "summary": "..."},
-    "he": {"title": "...", "summary": "..."}
-  }
-}
+{{
+  "url_hash": {{
+{output_block}
+  }}
+}}
 Where url_hash is the 8-char md5 hash of the URL provided in input."""
 
 
@@ -57,13 +73,18 @@ def save_cache(cache):
         json.dump(cache, f, ensure_ascii=False, indent=2)
 
 
-def translate_batch(items, client, dry_run, max_tokens=4096):
+def translate_batch(items, client, dry_run, max_tokens=4096, langs=("ru", "he")):
     if dry_run:
-        return {i["url_hash"]: {
-            "ru": {"title": f"[RU] {i['title']}", "summary": f"[RU] {i.get('summary','')}"},
-            "he": {"title": f"[HE] {i['title']}", "summary": f"[HE] {i.get('summary','')}"},
-        } for i in items}
+        result = {}
+        for i in items:
+            result[i["url_hash"]] = {}
+            if "ru" in langs:
+                result[i["url_hash"]]["ru"] = {"title": f"[RU] {i['title']}", "summary": f"[RU] {i.get('summary','')}"}
+            if "he" in langs:
+                result[i["url_hash"]]["he"] = {"title": f"[HE] {i['title']}", "summary": f"[HE] {i.get('summary','')}"}
+        return result
 
+    system_prompt = build_system_prompt(langs)
     user_content = json.dumps(
         [{"url_hash": i["url_hash"], "title": i["title"], "summary": i.get("summary") or ""} for i in items],
         ensure_ascii=False
@@ -74,7 +95,7 @@ def translate_batch(items, client, dry_run, max_tokens=4096):
             response = client.messages.create(
                 model="claude-haiku-4-5-20251001",
                 max_tokens=max_tokens,
-                system=SYSTEM_PROMPT,
+                system=system_prompt,
                 messages=[{"role": "user", "content": user_content}]
             )
             raw = response.content[0].text.strip()
@@ -96,7 +117,7 @@ def translate_batch(items, client, dry_run, max_tokens=4096):
     return {}
 
 
-def translate_articles(articles, dry_run=False):
+def translate_articles(articles, dry_run=False, langs=("ru", "he")):
     client = anthropic.Anthropic() if not dry_run else None
     cache = load_cache()
 
@@ -121,18 +142,17 @@ def translate_articles(articles, dry_run=False):
         mtokens = MAX_TOKENS_FULL if include_summary else MAX_TOKENS_TITLE
         for i in range(0, len(batch_articles), bsize):
             batch = batch_articles[i:i + bsize]
-
             items = [{"url_hash": url_id(a["url"]), "title": a["title"],
                       **({"summary": a.get("summary", "")} if include_summary else {})}
                      for a in batch]
-            log.info(f"Translating batch {i//BATCH_SIZE+1} ({'full' if include_summary else 'title-only'}), {len(items)} items")
-            result = translate_batch(items, client, dry_run, max_tokens=mtokens)
+            log.info(f"Translating batch {i//bsize+1} ({'full' if include_summary else 'title-only'}), {len(items)} items")
+            result = translate_batch(items, client, dry_run, max_tokens=mtokens, langs=langs)
             for a in batch:
                 h = url_id(a["url"])
                 if h in result:
                     trans = result[h]
                     if not include_summary:
-                        for lang in ("ru", "he"):
+                        for lang in langs:
                             if lang in trans:
                                 trans[lang].pop("summary", None)
                     a["translations"] = trans
@@ -153,8 +173,12 @@ def main():
     parser.add_argument("--mode", choices=["daily", "weekly"], required=True)
     parser.add_argument("--date")
     parser.add_argument("--week", type=int)
+    parser.add_argument("--langs", default="ru,he", help="Comma-separated langs to translate, e.g. ru,he or ru")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
+
+    langs = tuple(l.strip() for l in args.langs.split(","))
+    log.info(f"Target languages: {langs}")
 
     now = datetime.now(timezone.utc)
 
@@ -175,7 +199,7 @@ def main():
         sys.exit(1)
 
     log.info(f"Loaded {len(articles)} articles")
-    articles = translate_articles(articles, dry_run=args.dry_run)
+    articles = translate_articles(articles, dry_run=args.dry_run, langs=langs)
 
     translated = sum(1 for a in articles if a.get("translations"))
     log.info(f"Translated: {translated}/{len(articles)}")
