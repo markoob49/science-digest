@@ -26,7 +26,7 @@
       "type": "academic",
       "lang": "en",
       "base_score": 95,
-      "rss_url": "https://www.cell.com/cell/rss",
+      "rss_url": "https://www.cell.com/cell/rss/current",
       "category_default": "biology",
       "has_rss": true
     },
@@ -96,7 +96,7 @@
       "type": "academic",
       "lang": "en",
       "base_score": 85,
-      "rss_url": "https://journals.aps.org/prl/rss/recent",
+      "rss_url": "https://journals.aps.org/prl/rss/toc.xml",
       "category_default": "physics",
       "has_rss": true
     },
@@ -196,7 +196,7 @@
       "type": "news",
       "lang": "en",
       "base_score": 42,
-      "rss_url": "https://www.scientificamerican.com/feeds/rss/",
+      "rss_url": "https://www.scientificamerican.com/section/latest/feed/",
       "category_default": "general",
       "has_rss": true
     },
@@ -296,7 +296,7 @@
       "type": "news",
       "lang": "en",
       "base_score": 30,
-      "rss_url": "https://www.eurekalert.org/rss.xml",
+      "rss_url": "https://www.eurekalert.org/rss/breaking.xml",
       "category_default": "general",
       "has_rss": true
     },
@@ -306,7 +306,7 @@
       "type": "institutional",
       "lang": "en",
       "base_score": 38,
-      "rss_url": "https://www.who.int/feeds/entity/mediacentre/news/en/rss.xml",
+      "rss_url": "https://www.who.int/rss-feeds/news-english.xml",
       "category_default": "medicine",
       "has_rss": true
     },
