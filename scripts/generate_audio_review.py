@@ -194,7 +194,7 @@ def synthesize_silero(script: str, wav_path: str) -> None:
     model = torch.package.PackageImporter(model_path).load_pickle("tts_models", "model")
     model.to("cpu")
 
-    chunks = split_text_for_tts(script, max_chars=900)
+    chunks = split_text_for_tts(script, max_chars=500)
     print(f"Synthesizing {len(chunks)} chunk(s)…")
 
     audio_parts = []
@@ -207,7 +207,9 @@ def synthesize_silero(script: str, wav_path: str) -> None:
             speaker="eugene",
             sample_rate=48000,
         )
-        audio_parts.append(audio.numpy())
+        audio_np = audio.numpy()
+        print(f"    → {len(audio_np)/48000:.1f}s audio")
+        audio_parts.append(audio_np)
         if i < len(chunks):
             audio_parts.append(silence)
 
