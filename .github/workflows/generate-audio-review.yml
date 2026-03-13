@@ -32,20 +32,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-audio-
 
-      # Cache Silero model weights (~100 MB)
-      - name: Cache Silero model
-        uses: actions/cache@v4
-        with:
-          path: /tmp/v5_2_ru.pt
-          key: silero-v5_2-ru-pt
-
-      - name: Install ffmpeg
-        run: sudo apt-get install -y ffmpeg
-
       - name: Install Python dependencies
         run: |
-          pip install --quiet anthropic arxiv requests beautifulsoup4 soundfile
-          pip install --quiet torch torchaudio --index-url https://download.pytorch.org/whl/cpu
+          pip install --quiet anthropic arxiv requests beautifulsoup4 edge-tts
 
       - name: Generate audio review
         env:
