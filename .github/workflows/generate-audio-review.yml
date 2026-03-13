@@ -1,0 +1,63 @@
+name: Generate Audio Review
+
+on:
+  workflow_dispatch:
+    inputs:
+      article_url:
+        description: 'URL статьи (arXiv, Nature, PubMed и др.)'
+        required: true
+        type: string
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # Cache pip dependencies (torch is large — ~600 MB)
+      - name: Cache pip packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-audio-${{ hashFiles('**/generate_audio_review.py') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-audio-
+
+      # Cache Silero model weights (~100 MB, downloaded once by torch.hub)
+      - name: Cache Silero model
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/torch/hub
+          key: silero-v5-ru-v3_1
+
+      - name: Install Python dependencies
+        run: |
+          pip install --quiet anthropic arxiv requests beautifulsoup4 soundfile
+          pip install --quiet torch torchaudio --index-url https://download.pytorch.org/whl/cpu
+
+      - name: Generate audio review
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          ARTICLE_URL: ${{ github.event.inputs.article_url }}
+        run: python scripts/generate_audio_review.py "$ARTICLE_URL"
+
+      - name: Render audio page
+        run: python scripts/render_audio_page.py
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/audio/
+          git diff --cached --quiet \
+            || git commit -m "audio: new review [skip ci]" \
+            && git push
