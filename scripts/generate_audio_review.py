@@ -204,19 +204,11 @@ def wav_to_mp3(wav_path: str, mp3_path: str) -> None:
 # ── metadata ──────────────────────────────────────────────────────────────────
 
 def get_duration(mp3_path: str) -> float:
-    """Get MP3 duration in seconds via ffprobe."""
-    result = subprocess.run(
-        [
-            "ffprobe", "-v", "error",
-            "-show_entries", "format=duration",
-            "-of", "default=noprint_wrappers=1:nokey=1",
-            mp3_path,
-        ],
-        capture_output=True, text=True,
-    )
+    """Get MP3 duration in seconds via mutagen."""
     try:
-        return float(result.stdout.strip())
-    except ValueError:
+        from mutagen.mp3 import MP3
+        return MP3(mp3_path).info.length
+    except Exception:
         return 0.0
 
 
