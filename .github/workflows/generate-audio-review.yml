@@ -24,20 +24,20 @@ jobs:
           python-version: '3.11'
 
       # Cache pip dependencies (torch is large — ~600 MB)
-#      - name: Cache pip packages
-#        uses: actions/cache@v4
-#        with:
-#          path: ~/.cache/pip
-#          key: ${{ runner.os }}-pip-audio-v2
-#          restore-keys: |
-#            ${{ runner.os }}-pip-audio-
+      - name: Cache pip packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-audio-${{ hashFiles('**/generate_audio_review.py') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-audio-
 
-      # Cache Silero model weights (~100 MB, downloaded once by torch.hub)
+      # Cache Silero model weights (~100 MB)
       - name: Cache Silero model
         uses: actions/cache@v4
         with:
-          path: ~/.cache/torch/hub
-          key: silero-v5_2-ru
+          path: /tmp/v5_2_ru.pt
+          key: silero-v5_2-ru-pt
 
       - name: Install Python dependencies
         run: |
