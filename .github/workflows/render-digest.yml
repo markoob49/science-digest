@@ -88,7 +88,9 @@ jobs:
         run: |
           echo "Generated files:"
           for f in docs/index.html docs/en/index.html docs/he/index.html; do
-            [ -f "$f" ] && echo "  $f — $(wc -c < $f | numfmt --to=iec)"
+            if [ -f "$f" ]; then
+              echo "  $f — $(du -sh $f | cut -f1)"
+            fi
           done
 
       - name: Commit and push updated HTML
