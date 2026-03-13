@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Аудио-обзоры — Наука за неделю</title>
+  <link rel="stylesheet" href="../assets/fonts/fonts.css">
+  <style>
+    :root {
+      --navy:   #0F172A;
+      --navy2:  #1E293B;
+      --navy3:  #334155;
+      --accent: #3B82F6;
+      --accent2:#60A5FA;
+      --text:   #E2E8F0;
+      --muted:  #94A3B8;
+      --border: #2A3A52;
+      --radius: 12px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+      background: var(--navy);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2rem 1rem 4rem;
+    }
+
+    /* ── header ── */
+    header {
+      max-width: 860px;
+      margin: 0 auto 2.5rem;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.875rem;
+      margin-bottom: 1.5rem;
+      transition: color .2s;
+    }
+    .back-link:hover { color: var(--accent2); }
+    .back-link::before { content: '←'; }
+
+    h1 {
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--text) 0%, var(--accent2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .subtitle {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-top: 0.4rem;
+    }
+
+    /* ── cards ── */
+    .feed {
+      max-width: 860px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .card {
+      background: var(--navy2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.4rem 1.6rem;
+      transition: border-color .2s, transform .15s;
+    }
+    .card:hover {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.75rem;
+    }
+    .source-tag {
+      background: rgba(59,130,246,.15);
+      color: var(--accent2);
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      border: 1px solid rgba(59,130,246,.3);
+    }
+    .date {
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+    .badge {
+      margin-left: auto;
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      line-height: 1.45;
+      margin-bottom: 0.55rem;
+    }
+    .card-title a {
+      color: var(--text);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .card-title a:hover { color: var(--accent2); }
+
+    .card-desc {
+      color: var(--muted);
+      font-size: 0.875rem;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    /* ── audio player ── */
+    .player {
+      width: 100%;
+      height: 40px;
+      border-radius: 8px;
+      accent-color: var(--accent);
+      background: var(--navy3);
+    }
+    /* Chrome/Edge custom scrollbar for audio */
+    .player::-webkit-media-controls-panel {
+      background-color: var(--navy3);
+    }
+
+    /* ── empty state ── */
+    .empty {
+      text-align: center;
+      color: var(--muted);
+      padding: 4rem 1rem;
+    }
+    .empty-icon { font-size: 3rem; margin-bottom: 1rem; }
+
+    /* ── responsive ── */
+    @media (max-width: 600px) {
+      .card { padding: 1.1rem 1.2rem; }
+      .badge { margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a class="back-link" href="../index.html">Назад к дайджесту</a>
+    <h1>🎙 Аудио-обзоры</h1>
+    <p class="subtitle">1 обзор</p>
+  </header>
+
+  <main class="feed">
+    
+    <article class="card">
+      <div class="card-meta">
+        <span class="source-tag">arxiv.org</span>
+        <span class="date">13 марта 2026</span>
+        <span class="badge">1:38</span>
+      </div>
+      <h2 class="card-title">
+        <a href="https://arxiv.org/html/2603.07333v2" target="_blank" rel="noopener">Broadband SETI: a New Strategy To Find Nearby Alien Civilizations</a>
+      </h2>
+      <p class="card-desc">Представьте себе: где-то во Вселенной развитая цивилизация пытается связаться с нами прямо сейчас. Возможно, их сигнал уже достиг Земли, но мы его пропустили, потому что искали не там, где нужно.</p>
+      <audio class="player" controls preload="none">
+        <source src="2026-03-13_arxiv_html_2603_07333v2.mp3" type="audio/mpeg">
+        Ваш браузер не поддерживает аудио.
+      </audio>
+    </article>
+  </main>
+</body>
+</html>
