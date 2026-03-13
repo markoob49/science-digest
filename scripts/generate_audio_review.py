@@ -176,46 +176,18 @@ def generate_script(article_text: str) -> str:
 
 # ── TTS ───────────────────────────────────────────────────────────────────────
 
-def synthesize_silero(script: str, wav_path: str) -> None:
-    """Synthesize speech with Silero TTS V5, handling long texts."""
-    import torch
-    import soundfile as sf
-    import numpy as np
+def synthesize_edge_tts(script: str, mp3_path: str) -> None:
+    """Synthesize speech with edge-tts (Microsoft Neural TTS)."""
+    import asyncio
+    import edge_tts
 
-    model_path = "/tmp/v5_2_ru.pt"
-    if not os.path.isfile(model_path):
-        print("Downloading Silero TTS model (~100 MB)…")
-        torch.hub.download_url_to_file(
-            "https://models.silero.ai/models/tts/ru/v5_2_ru.pt",
-            model_path,
-        )
-    else:
-        print("Using cached Silero TTS model.")
-    model = torch.package.PackageImporter(model_path).load_pickle("tts_models", "model")
-    model.to("cpu")
+    async def _run():
+        communicate = edge_tts.Communicate(script, voice="ru-RU-DmitryNeural")
+        await communicate.save(mp3_path)
 
-    chunks = split_text_for_tts(script, max_chars=500)
-    print(f"Synthesizing {len(chunks)} chunk(s)…")
-
-    audio_parts = []
-    silence = np.zeros(int(48000 * 0.3), dtype=np.float32)  # 0.3 s pause between chunks
-
-    for i, chunk in enumerate(chunks, 1):
-        print(f"  Chunk {i}/{len(chunks)}: {len(chunk)} chars")
-        audio = model.apply_tts(
-            text=chunk,
-            speaker="eugene",
-            sample_rate=48000,
-        )
-        audio_np = audio.numpy()
-        print(f"    → {len(audio_np)/48000:.1f}s audio")
-        audio_parts.append(audio_np)
-        if i < len(chunks):
-            audio_parts.append(silence)
-
-    combined = np.concatenate(audio_parts)
-    sf.write(wav_path, combined, 48000)
-    print(f"WAV saved: {wav_path} ({len(combined)/48000:.1f} s)")
+    print("Synthesizing with edge-tts (ru-RU-DmitryNeural)…")
+    asyncio.run(_run())
+    print(f"MP3 saved directly: {mp3_path}")
 
 
 def wav_to_mp3(wav_path: str, mp3_path: str) -> None:
@@ -295,13 +267,10 @@ def main():
 
     # ── synthesize ────────────────────────────────────────────────────────────
     slug = slugify_url(url)
-    wav_path = f"/tmp/{slug}.wav"
     mp3_filename = f"{slug}.mp3"
     mp3_path = str(audio_dir / mp3_filename)
 
-    synthesize_silero(script, wav_path)
-    wav_to_mp3(wav_path, mp3_path)
-    os.unlink(wav_path)
+    synthesize_edge_tts(script, mp3_path)
 
     # ── update reviews.json ───────────────────────────────────────────────────
     duration = get_duration(mp3_path)
