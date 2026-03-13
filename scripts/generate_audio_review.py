@@ -206,8 +206,6 @@ def synthesize_silero(script: str, wav_path: str) -> None:
             text=chunk,
             speaker="eugene",
             sample_rate=48000,
-            put_accent=True,
-            put_yo=True,
         )
         audio_parts.append(audio.numpy())
         if i < len(chunks):
