@@ -37,16 +37,13 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/torch/hub
-          key: silero-v5-ru-v3_1
+          key: silero-v5_2-ru
 
       - name: Install Python dependencies
         run: |
-          pip install --quiet anthropic arxiv requests beautifulsoup4 soundfile omegaconf
+          pip install --quiet anthropic arxiv requests beautifulsoup4 soundfile
           pip install --quiet torch torchaudio --index-url https://download.pytorch.org/whl/cpu
 
-      - name: Install ffmpeg
-        run: sudo apt-get install -y ffmpeg
-        
       - name: Generate audio review
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
