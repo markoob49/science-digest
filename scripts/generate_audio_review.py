@@ -182,14 +182,16 @@ def synthesize_silero(script: str, wav_path: str) -> None:
     import soundfile as sf
     import numpy as np
 
-    print("Loading Silero TTS model (first run downloads ~100 MB)…")
-    model, _ = torch.hub.load(
-        repo_or_dir="snakers4/silero-models",
-        model="silero_tts",
-        language="ru",
-        speaker="v5_2_ru",
-        trust_repo=True,
-    )
+    model_path = "/tmp/v5_2_ru.pt"
+    if not os.path.isfile(model_path):
+        print("Downloading Silero TTS model (~100 MB)…")
+        torch.hub.download_url_to_file(
+            "https://models.silero.ai/models/tts/ru/v5_2_ru.pt",
+            model_path,
+        )
+    else:
+        print("Using cached Silero TTS model.")
+    model = torch.package.PackageImporter(model_path).load_pickle("tts_models", "model")
     model.to("cpu")
 
     chunks = split_text_for_tts(script, max_chars=900)
