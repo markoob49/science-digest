@@ -185,6 +185,7 @@ def synthesize_silero(script: str, wav_path: str) -> None:
         model="silero_tts",
         language="ru",
         speaker="v3_1_ru",
+        trust_repo=True,
     )
     model.to("cpu")
     model.eval()
