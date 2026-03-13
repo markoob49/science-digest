@@ -97,8 +97,8 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/index.html docs/en/index.html docs/he/index.html
+          git add docs/
           WEEK="${{ steps.params.outputs.week }}"
           git diff --cached --quiet \
             && echo "No changes to commit" \
-            || git commit -m "render: W${WEEK} HTML updated [skip ci]" && git push
+            || (git commit -m "render: W${WEEK} HTML updated [skip ci]" && git push)
