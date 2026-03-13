@@ -34,7 +34,7 @@ jobs:
 
       - name: Install Python dependencies
         run: |
-          pip install --quiet anthropic arxiv requests beautifulsoup4 edge-tts
+          pip install --quiet anthropic arxiv requests beautifulsoup4 edge-tts mutagen
 
       - name: Generate audio review
         env:
