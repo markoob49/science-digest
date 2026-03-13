@@ -1,0 +1,102 @@
+name: Render Digest HTML
+
+on:
+  # Run manually from Actions tab with parameters
+  workflow_dispatch:
+    inputs:
+      week:
+        description: 'Week number (e.g. 11)'
+        required: true
+        default: '11'
+      langs:
+        description: 'Languages to render'
+        required: true
+        default: 'ru en he'
+        type: choice
+        options:
+          - 'ru en he'
+          - 'ru'
+          - 'en'
+          - 'he'
+          - 'ru en'
+
+  # Auto-render when translated JSON is updated
+  push:
+    paths:
+      - 'data/W*_translated.json'
+      - 'pipeline/render.py'
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Determine week number and data file
+        id: params
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            WEEK="${{ github.event.inputs.week }}"
+            LANGS="${{ github.event.inputs.langs }}"
+          else
+            # Auto-detect: find the latest W*_translated.json
+            LATEST=$(ls data/W*_translated.json 2>/dev/null | sort -V | tail -1)
+            WEEK=$(echo "$LATEST" | grep -oP '(?<=W)\d+')
+            LANGS="ru en he"
+          fi
+          echo "week=$WEEK" >> $GITHUB_OUTPUT
+          echo "langs=$LANGS" >> $GITHUB_OUTPUT
+          echo "data=data/W${WEEK}_translated.json" >> $GITHUB_OUTPUT
+          echo "Rendering week $WEEK from data/W${WEEK}_translated.json (langs: $LANGS)"
+
+      - name: Verify data file exists
+        run: |
+          DATA="${{ steps.params.outputs.data }}"
+          if [ ! -f "$DATA" ]; then
+            echo "ERROR: $DATA not found"
+            ls data/ 2>/dev/null || echo "(data/ folder is empty or missing)"
+            exit 1
+          fi
+          echo "Found: $DATA ($(wc -c < $DATA | numfmt --to=iec) bytes)"
+
+      - name: Create output directories
+        run: mkdir -p docs/en docs/he
+
+      - name: Render HTML for all requested languages
+        run: |
+          WEEK="${{ steps.params.outputs.week }}"
+          DATA="${{ steps.params.outputs.data }}"
+          for LANG in ${{ steps.params.outputs.langs }}; do
+            echo "--- Rendering: $LANG ---"
+            python pipeline/render.py \
+              --mode weekly \
+              --week "$WEEK" \
+              --lang "$LANG" \
+              --data "$DATA"
+          done
+
+      - name: Show rendered file sizes
+        run: |
+          echo "Generated files:"
+          for f in docs/index.html docs/en/index.html docs/he/index.html; do
+            [ -f "$f" ] && echo "  $f — $(wc -c < $f | numfmt --to=iec)"
+          done
+
+      - name: Commit and push updated HTML
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/index.html docs/en/index.html docs/he/index.html
+          WEEK="${{ steps.params.outputs.week }}"
+          git diff --cached --quiet \
+            && echo "No changes to commit" \
+            || git commit -m "render: W${WEEK} HTML updated [skip ci]" && git push
