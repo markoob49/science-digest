@@ -188,8 +188,7 @@ def synthesize_silero(script: str, wav_path: str) -> None:
         trust_repo=True,
     )
     model.to("cpu")
-    model.eval()
-
+ 
     chunks = split_text_for_tts(script, max_chars=900)
     print(f"Synthesizing {len(chunks)} chunk(s)…")
 
