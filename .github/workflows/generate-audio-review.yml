@@ -44,6 +44,9 @@ jobs:
           pip install --quiet anthropic arxiv requests beautifulsoup4 soundfile omegaconf
           pip install --quiet torch torchaudio --index-url https://download.pytorch.org/whl/cpu
 
+      - name: Install ffmpeg
+        run: sudo apt-get install -y ffmpeg
+        
       - name: Generate audio review
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
